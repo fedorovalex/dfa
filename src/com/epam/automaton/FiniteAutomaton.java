@@ -5,35 +5,35 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Детерминированный конечный автомат
+ * Deterministic finite automaton
  */
 public class FiniteAutomaton {
 
-    private String inputAlphabet = "01"; // Алфавит входных символов.
+    private String inputAlphabet = "01"; // The alphabet of input symbols.
     /*
-        Множество состояний:
+        Set of states:
 
-        q1 - Едениц ЧЕТ, Нулей ЧЕТ
-        q2 - Едениц НЕчет, Нулей НЕчет
-        q3 - Едениц ЧЕТ, Нулей НЕчет
-        q4 - Едениц НЕчет, Нулей ЧЕТ
+        q1 - An even number of ones and an even number of zeros.
+        q2 - An uneven number of ones and an uneven number of zeros.
+        q3 - An even number of ones and an uneven number of zeros.
+        q4 - An uneven number of ones and an even number of zeros.
      */
-    private int q0 = 1; // Начальное состояние
+    private int q0 = 1; // The initial state.
     /**
-     * Множество конечных состояний.
-     * Достигается при ЧЕТНОМ колличестве нулей и НЕ четном количестве едениц.
+     * Set of finite states.
+     * Achieved when an uneven number of ones and an even number of zeros.
      */
     private String finalStatus = "4";
-    private Map<Integer, Integer> changeState = new HashMap<>(); // Хешь функция смены состояния
-    private int status; // Нынешнее состояние.
+    private Map<Integer, Integer> changeState = new HashMap<>(); // The hash function status change.
+    private int status; // Current status.
 
     /**
-     * Устанавливается начальное состояние.
-     * Заполняется хэш функция смены состояний.
+     * Set the initial state.
+     * Filled HashMap transitions between states.
      */
     public FiniteAutomaton() {
-        this.status = this.q0; // Нынешнему состоянию присваивается начальное состояние
-        this.changeState.put(1, 3); // Преобразование состояний
+        resetStatus(); // Reset to initial state.
+        this.changeState.put(1, 3); // Change states.
         this.changeState.put(2, 4);
         this.changeState.put(3, 1);
         this.changeState.put(4, 2);
@@ -44,19 +44,20 @@ public class FiniteAutomaton {
     }
 
     /**
-     * Проверяет входное слово на допустимость.
-     * Слово допустимо если после обработки последнего символа слова, автомат окажется в конечном состоянии.
-     * То есть слово допустимо когда в слове ЧЕТНОЕ колличество нулей и НЕ четное количество едениц.
+     * Checks on the permissibility of the input word.
+     * The word is admissible if after the last character of word processing, the machine will be in the final state.
+     * That word is permissible when in him an uneven number of ones and an even number of zeros.
      *
-     * Меняет состояние автомата на каждом символе из входного алфавита.
-     * Если символ не из алфавита, то пропускает его.
+     * It changes the state of the machine at each symbol from an input alphabet.
+     * If the character is not in the alphabet, then skip it.
      *
-     * @param entryWord - Входное слово.
-     * @return - Возвращает true если автомат находится в конечном состоянии, иначе false.
+     * @param entryWord - Entry word.
+     * @return - Returns true if the machine is in the final state, otherwise false.
      */
     public boolean isWordPermissible(String entryWord) {
 
-        String symbol; // TODO попытатся использывать char
+        this.status = this.q0;
+        String symbol;
 
         for (int i = 0; i < entryWord.length(); i++) {
             symbol = entryWord.substring(i, i + 1);
@@ -68,22 +69,29 @@ public class FiniteAutomaton {
     }
 
     /**
-     * Проверяет принадлежит ли символ входному алфавиту.
+     * Checks whether a character is part of the input alphabet.
      *
-     * @param symbol - символ для проверки.
-     * @return true - если принадлежит, false в противном случае.
+     * @param symbol - symbol to test.
+     * @return true - if belongs, false otherwise.
      */
     private boolean isInputAlphabet(String symbol) {
         return this.inputAlphabet.contains(symbol);
     }
 
     /**
-     * Проверяет в канечном ли состоянии находится автомат.
-     * То есть проверяет принадлежит ли нынешнее состояние множеству конечных состояний.
+     * Checks whether the status of the machine is final.
+     * In other words it checks whether the current state belongs to the set of final states.
      *
-     * @return - true - если состояние конечно, false в противном случае.
+     * @return - true - if the state of the course, false otherwise.
      */
     private boolean isFinalStatus() {
         return this.finalStatus.contains(Integer.toString(this.status));
+    }
+
+    /**
+     * Reset to initial state.
+     */
+    private void resetStatus() {
+        this.status = this.q0;
     }
 }

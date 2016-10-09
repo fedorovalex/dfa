@@ -52,12 +52,13 @@ public class FiniteAutomaton {
      * If the character is not in the alphabet, then skip it.
      *
      * @param entryWord - Entry word.
-     * @return - Returns true if the machine is in the final state, otherwise false.
+     * @return - Returns 'yes' if the machine is in the final state, otherwise 'no'.
      */
-    public boolean isWordPermissible(String entryWord) {
+    public String isWordPermissible(String entryWord) {
 
         this.status = this.q0;
         String symbol;
+        String permissible;
 
         for (int i = 0; i < entryWord.length(); i++) {
             symbol = entryWord.substring(i, i + 1);
@@ -65,7 +66,13 @@ public class FiniteAutomaton {
                 this.status = this.changeState.get(this.status + 4 * Integer.parseInt(symbol));
             }
         }
-        return isFinalStatus();
+        if (isFinalStatus()) {
+            permissible = "yes";
+        }
+        else {
+            permissible = "no";
+        }
+        return permissible;
     }
 
     /**
